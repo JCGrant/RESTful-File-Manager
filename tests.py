@@ -8,7 +8,8 @@ import errors
 
 TEST_FILES_DIR = 'test_files/'
 
-class EmotechTaskTests(unittest.TestCase):
+
+class FileManagingTests(unittest.TestCase):
 
     def setUp(self):
         app.app.testing = True
@@ -18,6 +19,8 @@ class EmotechTaskTests(unittest.TestCase):
     def tearDown(self):
         shutil.rmtree(TEST_FILES_DIR)
 
+
+class GetFileTests(FileManagingTests):
 
     def test_get_existing_file(self):
         filename = TEST_FILES_DIR + 'test'
@@ -71,6 +74,8 @@ class EmotechTaskTests(unittest.TestCase):
             "contents": errors.FILE_NOT_EXIST,
         })
 
+
+class PostFileTests(FileManagingTests):
 
     def test_post_nonexisting_file(self):
         filename = TEST_FILES_DIR + 'test'
@@ -145,6 +150,8 @@ class EmotechTaskTests(unittest.TestCase):
             "contents": errors.CONTENTS_MUST_BE_STRING,
         })
 
+
+class PutFileTests(FileManagingTests):
 
     def test_put_existing_file(self):
         filename = TEST_FILES_DIR + 'test'
@@ -222,6 +229,7 @@ class EmotechTaskTests(unittest.TestCase):
             "contents": errors.CONTENTS_MUST_BE_STRING,
         })
 
+class DeleteFileTests(FileManagingTests):
 
     def test_delete_existing_file(self):
         filename = TEST_FILES_DIR + 'test'
