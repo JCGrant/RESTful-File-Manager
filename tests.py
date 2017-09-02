@@ -33,7 +33,7 @@ class EmotechTaskTests(unittest.TestCase):
             "path": filename,
             "contents": contents,
         })
-    
+
     def test_get_nonexisting_file(self):
         filename = TEST_FILES_DIR + 'test'
         contents = 'hello'
@@ -45,7 +45,20 @@ class EmotechTaskTests(unittest.TestCase):
             "path": filename,
             "contents": errors.FILE_NOT_EXIST,
         })
-    
+
+    def test_get_directory(self):
+        filename = TEST_FILES_DIR + 'new_dir'
+
+        os.makedirs(filename)
+
+        r = self.app.get('/files/' + filename)
+        data = json.loads(r.get_data().decode())
+        self.assertEqual(data, {
+            "error": True,
+            "path": filename,
+            "contents": errors.IS_A_DIRECTORY,
+        })
+
     def test_get_nonexisting_dir(self):
         filename = TEST_FILES_DIR + 'new_dir/test'
         contents = 'hello'
@@ -91,6 +104,19 @@ class EmotechTaskTests(unittest.TestCase):
             "error": True,
             "path": filename,
             "contents": errors.FILE_EXISTS,
+        })
+
+    def test_post_directory(self):
+        filename = TEST_FILES_DIR + 'new_dir'
+
+        os.makedirs(filename)
+
+        r = self.app.post('/files/' + filename)
+        data = json.loads(r.get_data().decode())
+        self.assertEqual(data, {
+            "error": True,
+            "path": filename,
+            "contents": errors.IS_A_DIRECTORY,
         })
 
     def test_post_nonexisting_dir(self):
@@ -156,6 +182,19 @@ class EmotechTaskTests(unittest.TestCase):
             "contents": errors.FILE_NOT_EXIST,
         })
 
+    def test_put_directory(self):
+        filename = TEST_FILES_DIR + 'new_dir'
+
+        os.makedirs(filename)
+
+        r = self.app.put('/files/' + filename)
+        data = json.loads(r.get_data().decode())
+        self.assertEqual(data, {
+            "error": True,
+            "path": filename,
+            "contents": errors.IS_A_DIRECTORY,
+        })
+
     def test_put_nonexisting_dir(self):
         filename = TEST_FILES_DIR + 'new_dir/test'
         contents = 'hello'
@@ -211,6 +250,19 @@ class EmotechTaskTests(unittest.TestCase):
             "error": True,
             "path": filename,
             "contents": errors.FILE_NOT_EXIST,
+        })
+
+    def test_delete_directory(self):
+        filename = TEST_FILES_DIR + 'new_dir'
+
+        os.makedirs(filename)
+
+        r = self.app.delete('/files/' + filename)
+        data = json.loads(r.get_data().decode())
+        self.assertEqual(data, {
+            "error": True,
+            "path": filename,
+            "contents": errors.IS_A_DIRECTORY,
         })
 
     def test_delete_nonexisting_dir(self):
