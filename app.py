@@ -12,8 +12,7 @@ Average word length (and standard deviation) in that folder.
 Total number of bytes stored in that folder.
 Note: All these computations must be calculated recursively from the provided path to the entry point.
 """
-
-from flask import Flask
+from flask import Flask, jsonify
 from flask_restful import reqparse, Resource, Api
 
 import errors
@@ -70,3 +69,9 @@ class TextFile(Resource):
 
 
 api.add_resource(TextFile, '/files/<path:path>')
+
+@app.route('/stats/num_files/<path:path>')
+def num_files(path):
+    return jsonify({
+        'num_files': file_utils.num_files(path),
+    })

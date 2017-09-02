@@ -48,3 +48,13 @@ def delete_file(path):
         contents = errors.FILE_NOT_EXIST
         error = True
     return contents, error
+
+
+def num_files(path):
+    if os.path.isfile(path):
+        return 1
+    total = 0
+    children = os.listdir(path)
+    for child in children:
+        total += num_files(path + '/' + child)
+    return total
