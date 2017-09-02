@@ -82,6 +82,12 @@ def avg_num_chars(path):
         'avg_num_chars': file_utils.avg_num_chars(path),
     })
 
+@app.route('/stats/avg_word_length/<path:path>')
+def avg_word_length(path):
+    return jsonify({
+        'avg_word_length': file_utils.avg_word_length(path),
+    })
+
 @app.route('/stats/total_bytes/<path:path>')
 def total_bytes(path):
     return jsonify({

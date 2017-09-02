@@ -86,6 +86,30 @@ def avg_num_chars(path):
         'sd': sd,
     }
 
+def word_lengths_in_file(filename):
+    with open(filename, 'r') as f:
+        words = f.read().split()
+        return [len(word) for word in words]
+
+def word_lengths_in_dir(path):
+    if os.path.isfile(path):
+        return word_lengths_in_file(path)
+    word_lengths = []
+    children = os.listdir(path)
+    for child in children:
+        word_lengths += word_lengths_in_dir(path + '/' + child)
+    return word_lengths
+
+def avg_word_length(path):
+    word_lengths = word_lengths_in_dir(path)
+    N = len(word_lengths)
+    mean = sum(word_lengths) / N
+    sd = math.sqrt(sum(((word_length - mean) ** 2) for word_length in word_lengths) / (N - 1))
+    return {
+        'mean': mean,
+        'sd': sd,
+    }
+
 def total_bytes(path):
     if os.path.isfile(path):
         return os.stat(path).st_size
