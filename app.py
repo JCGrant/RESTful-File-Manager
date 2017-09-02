@@ -75,3 +75,9 @@ def num_files(path):
     return jsonify({
         'num_files': file_utils.num_files(path),
     })
+
+@app.route('/stats/total_bytes/<path:path>')
+def total_bytes(path):
+    return jsonify({
+        'total_bytes': file_utils.total_bytes(path),
+    })

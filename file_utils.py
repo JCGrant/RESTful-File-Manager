@@ -58,3 +58,12 @@ def num_files(path):
     for child in children:
         total += num_files(path + '/' + child)
     return total
+
+def total_bytes(path):
+    if os.path.isfile(path):
+        return os.stat(path).st_size
+    total = 0
+    children = os.listdir(path)
+    for child in children:
+        total += total_bytes(path + '/' + child)
+    return total
