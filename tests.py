@@ -287,5 +287,51 @@ class DeleteFileTests(FileManagingTests):
 
 
 
+def make_file_tree(tree, root='.'):
+    for key, value in tree.items():
+        if type(value) is str:
+            with open(root + '/' + key, 'w') as f:
+                f.write(value)
+        if type(value) is dict:
+            new_root = root + '/' + key
+            os.makedirs(new_root)
+            make_file_tree(value, root=new_root)
+
+
+STATS_TEST_FILES_DIR = TEST_FILES_DIR.rstrip('/')
+
+def make_test_files(tree):
+    return make_file_tree({
+        STATS_TEST_FILES_DIR: tree
+    })
+
+
+class StatsTests(unittest.TestCase):
+
+    def setUp(self):
+        app.app.testing = True
+        self.app = app.app.test_client()
+    
+    def tearDown(self):
+        shutil.rmtree(STATS_TEST_FILES_DIR)
+
+    def test_num_files(self):
+        dir_name = STATS_TEST_FILES_DIR
+        make_test_files({
+            'file1': '12abC',
+            'file2': '12abC',
+            'dir': {
+                'file3': '12ab',
+                'file4': '12abCD',
+            },
+        })
+
+        r = self.app.get('/stats/num_files/' + dir_name)
+        data = json.loads(r.get_data().decode())
+        self.assertEqual(data, {
+            "num_files": 4,
+        })
+
+
 if __name__ == '__main__':
     unittest.main()
