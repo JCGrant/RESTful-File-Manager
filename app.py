@@ -76,6 +76,12 @@ def num_files(path):
         'num_files': file_utils.num_files(path),
     })
 
+@app.route('/stats/avg_num_chars/<path:path>')
+def avg_num_chars(path):
+    return jsonify({
+        'avg_num_chars': file_utils.avg_num_chars(path),
+    })
+
 @app.route('/stats/total_bytes/<path:path>')
 def total_bytes(path):
     return jsonify({
