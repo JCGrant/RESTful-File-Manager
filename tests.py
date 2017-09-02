@@ -331,6 +331,64 @@ class StatsTests(unittest.TestCase):
         self.assertEqual(data, {
             "num_files": 4,
         })
+    
+    def test_avg_num_chars(self):
+        dir_name = STATS_TEST_FILES_DIR
+        make_test_files({
+            'file1': '12abC',
+            'file2': '12abC',
+            'dir': {
+                'file3': '12ab',
+                'file4': '12abCD',
+            },
+        })
+
+        r = self.app.get('/stats/avg_num_chars/' + dir_name)
+        data = json.loads(r.get_data().decode())
+        self.assertEqual(data, {
+            'avg_num_chars': {
+                'mean': 5.0,
+                'sd': 0.816496580927726,
+            },
+        })
+    
+    def test_avg_word_length(self):
+        dir_name = STATS_TEST_FILES_DIR
+        make_test_files({
+            'file1': '12abC 12abCD',
+            'file2': '12abC',
+            'dir': {
+                'file3': '12ab',
+                'file4': '12abCD',
+            },
+        })
+
+        r = self.app.get('/stats/avg_word_length/' + dir_name)
+        data = json.loads(r.get_data().decode())
+        self.assertEqual(data, {
+            'avg_word_length': {
+                'mean': 5.2,
+                'sd': 0.8366600265340756,
+            },
+        })
+    
+    def test_total_bytes(self):
+        dir_name = STATS_TEST_FILES_DIR
+        make_test_files({
+            'file1': '12abC',
+            'file2': '12abC',
+            'dir': {
+                'file3': '12ab',
+                'file4': '12abCD',
+            },
+        })
+
+        r = self.app.get('/stats/total_bytes/' + dir_name)
+        data = json.loads(r.get_data().decode())
+        self.assertEqual(data, {
+            'total_bytes': 20,
+        })
+
 
 
 if __name__ == '__main__':
